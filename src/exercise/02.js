@@ -3,18 +3,35 @@
 
 import * as React from 'react'
 
+const useLocalStorageState = (key, initialValue = '') => {
+  const [state, setState] = React.useState(initialValue)
+
+  React.useEffect(() => {
+    window.localStorage.setItem(key, state)
+  }, [key, state])
+  
+  return [state, setState]
+}
+
 function Greeting({initialName = ''}) {
   // 🐨 initialize the state to the value from localStorage
   // 💰 window.localStorage.getItem('name') ?? initialName
-  const [name, setName] = React.useState(initialName)
+  const getLocalStorageName = () => window.localStorage.getItem('name')
+  const [name, setName] = useLocalStorageState('name', getLocalStorageName)
 
   // 🐨 Here's where you'll use `React.useEffect`.
   // The callback should set the `name` in localStorage.
   // 💰 window.localStorage.setItem('name', name)
+  // React.useEffect(() => {
+  //   window.localStorage.setItem('name', name)
+  // }, [name])
+  
 
   function handleChange(event) {
-    setName(event.target.value)
+    const value = event.target.value
+    setName(value)
   }
+
   return (
     <div>
       <form>
